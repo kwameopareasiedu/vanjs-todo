@@ -2240,10 +2240,10 @@ vanjs-ext@^0.2.0:
   dependencies:
     vanjs-core "^1.2.7"
 
-vanjs-routing@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/vanjs-routing/-/vanjs-routing-1.0.0.tgz#a4bb0d8a20138514a0ff125603a2c29f65e96e9a"
-  integrity sha512-bmA3ETqVZi5wf9SoPc7UbsoLsKa9dmjwEtUBFvtBFcW0+39FqnG2vAg1MiZ6W/YZH8ORYksBXS8y1tX+jybf3g==
+vanjs-routing@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vanjs-routing/-/vanjs-routing-1.1.0.tgz#6e8d0aba48274f6da9e722d74faea1eb3fe6290e"
+  integrity sha512-0glJfQFTcWX+l1glVEfUXQkzTS6/5OSkxgF0JG/MYpNlArJ2rQHuy7HArQcWfDhUrX0P5E9hNMNnsqNV2G34tw==
   dependencies:
     typescript "^5.3.3"
 

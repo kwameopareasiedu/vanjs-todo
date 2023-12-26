@@ -7,6 +7,7 @@ import HomePage from "@/pages/home-page.ts";
 
 export default function App() {
   return Router({
+    basename: import.meta.env.MODE === "production" ? "vanjs-todo" : "",
     className: "w-screen h-screen",
     routes: [
       { path: HOME_ROUTE, component: () => AuthGuard(HomePage) },

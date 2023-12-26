@@ -25,6 +25,6 @@
     "nanoid": "^5.0.4",
     "vanjs-core": "^1.2.7",
     "vanjs-ext": "^0.2.0",
-    "vanjs-routing": "^1.0.0"
+    "vanjs-routing": "^1.1.0"
   }
 }
