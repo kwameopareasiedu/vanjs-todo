@@ -62,7 +62,7 @@ export default function HomePage() {
   });
 
   return div(
-    { className: "w-full mx-auto max-w-[640px] flex flex-col gap-6 py-8" },
+    { className: "w-full mx-auto max-w-[640px] flex flex-col gap-6 py-8 px-8 md:px-0" },
     div(
       { className: "flex items-center gap-4" },
       img({ src: bars, className: "w-6 h-6" }),
