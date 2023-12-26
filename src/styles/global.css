@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .form-field {
+    @apply w-full h-[48px] outline-none rounded-xl border-2 border-green-100/50 focus:border-green-500/50 px-4 py-2;
+  }
+
+  .label {
+    @apply text-sm text-green-700 font-semibold mt-6 inline-block;
+  }
+
+  .btn-primary {
+    @apply w-full p-4 rounded-xl bg-green-600 text-white mt-6 disabled:opacity-30 disabled:cursor-not-allowed;
+  }
+}
