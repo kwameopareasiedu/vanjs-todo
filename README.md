@@ -8,6 +8,9 @@ This is a full-featured todo-list app with the following features:
 5. Completing todos
 6. Deleting todos
 
+# Live Demo
+Try the project live at https://kwameopareasiedu.github.io/
+
 ## Technologies
 The following technologies were used to build this app
 
