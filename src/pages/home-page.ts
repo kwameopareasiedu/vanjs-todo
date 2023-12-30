@@ -1,6 +1,6 @@
 import van from "vanjs-core";
 import * as vanx from "vanjs-ext";
-import { authenticatedUser, Text } from "@/components";
+import { authenticatedUser, Input, Text } from "@/components";
 import { signOut } from "firebase/auth";
 import { auth, db } from "@/config/firebase.ts";
 import bars from "@/assets/bars.svg";
@@ -8,24 +8,29 @@ import { collection, doc, getDocs, query, setDoc, where } from "firebase/firesto
 import { nanoid } from "nanoid";
 import Todo from "@/models/todo.ts";
 import { TodoItem } from "@/components/todo-item.ts";
+import { Form, yupValidator } from "vanjs-form";
+import * as yup from "yup";
 
-const { div, button, img, input, a } = van.tags;
+const { div, button, img, a, form: formEl } = van.tags;
 
 export default function HomePage() {
-  const newTodo = van.state("");
+  const form = new Form({
+    initialValues: { content: "" },
+    validator: yupValidator(
+      yup.object({
+        content: yup.string().required("Required")
+      })
+    ),
+    validationMode: "oninput"
+  });
+
   const creatingTodo = van.state(false);
   const todos = vanx.reactive<Todo[]>([]);
 
-  const handleChangeNewTodo = (e: KeyboardEvent) => {
-    newTodo.val = (e.target as HTMLInputElement).value;
-  };
-
-  const handleCreateTodo = () => {
-    if (!newTodo.val) return;
-
+  const handleCreateTodo = form.handleSubmit((values) => {
     const todo: Todo = {
       id: nanoid(),
-      content: newTodo.val,
+      content: values.content,
       userId: authenticatedUser.val!.id,
       completed: false
     };
@@ -41,8 +46,8 @@ export default function HomePage() {
 
     todos.unshift(todo);
     creatingTodo.val = true;
-    newTodo.val = "";
-  };
+    form.reset("content");
+  });
 
   const handleTodoUpdated = (todo: Todo, index: number) => {
     todos.splice(index, 1, todo);
@@ -71,19 +76,23 @@ export default function HomePage() {
       Text({ size: "sm" }, `Logged in as: ${authenticatedUser.val?.name}`),
       button({ className: "bg-rose-600 px-2 py-1 rounded text-white text-sm", onclick: () => signOut(auth) }, "Logout")
     ),
-    div(
-      { className: "flex items-center gap-4" },
-      input({
-        className: "form-field flex-1",
-        placeholder: "Create new todo",
-        value: newTodo,
-        oninput: handleChangeNewTodo
-      }),
+    formEl(
+      {
+        className: "flex items-start gap-4",
+        onsubmit: handleCreateTodo
+      },
+      Input(
+        form.register("content", {
+          className: "flex-1",
+          placeholder: "Create new todo",
+          error: () => form.error("content")
+        })
+      ),
       button(
         {
+          type: "submit",
           className: "rounded bg-green-400 px-4 py-2 text-sm text-white disabled:opacity-30",
-          onclick: handleCreateTodo,
-          disabled: () => !newTodo.val || creatingTodo.val
+          disabled: () => creatingTodo.val
         },
         "Add Todo"
       )

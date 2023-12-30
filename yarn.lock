@@ -2260,10 +2260,10 @@ vanjs-ext@^0.2.0:
   dependencies:
     vanjs-core "^1.2.7"
 
-vanjs-form@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/vanjs-form/-/vanjs-form-1.0.0.tgz#38e55b3dcbe200532aecd6fcb5371e6386c4b3d0"
-  integrity sha512-/YaD4ZXrs9jxgG+jKDIVxn0KGG+dMA/QecgmXaip9otOg2MHRzZHKOn/VLIC6WLvw0Lu/FQO3DWfExECGy0tRA==
+vanjs-form@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vanjs-form/-/vanjs-form-1.0.1.tgz#90ddcdc92750cdf62099efb1739de630dd0e81e1"
+  integrity sha512-A3f/Ub3tF6jRpqBbqgWu6O/G74DQtQATeTvhWBeRS4z70uSoUvvroBJ7FdKPgE25E+EfMaxwOxPXqdh8kDcdiQ==
   dependencies:
     typescript "^5.3.3"
     vanjs-core "^1.2.7"
