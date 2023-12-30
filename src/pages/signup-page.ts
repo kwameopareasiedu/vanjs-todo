@@ -8,7 +8,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { Form, yupValidator } from "vanjs-form";
 import * as yup from "yup";
 
-const { div, label, form: formEl, button, a } = van.tags;
+const { div, label, form: formEl, button, a, br } = van.tags;
 
 export default function SignupPage() {
   const form = new Form({
@@ -66,7 +66,8 @@ export default function SignupPage() {
           { href: "https://github.com/kwameopareasiedu", target: "_blank", className: "underline text-cyan-500" },
           "Kwame Opare Asiedu"
         ),
-        " with ♥ with ",
+        " with ",
+        br(),
         a({ href: "https://vanjs.org", target: "_blank", className: "underline text-rose-500" }, "VanJS"),
         ", ",
         a(
