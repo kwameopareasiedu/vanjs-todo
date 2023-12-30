@@ -1,50 +1,46 @@
 import van from "vanjs-core";
 import { Link, navigate } from "vanjs-routing";
-import { Text } from "@/components";
+import { Input, Text } from "@/components";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/config/firebase.ts";
 import { HOME_ROUTE } from "@/config/routes.ts";
 import { doc, setDoc } from "firebase/firestore";
+import { Form, yupValidator } from "vanjs-form";
+import * as yup from "yup";
 
-const { div, input, label, form, button, a } = van.tags;
+const { div, label, form: formEl, button, a } = van.tags;
 
 export default function SignupPage() {
-  const name = van.state("");
-  const email = van.state("");
-  const password = van.state("");
-  const confirmPassword = van.state("");
+  const form = new Form({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    },
+    validator: yupValidator(
+      yup.object({
+        name: yup.string().required("Required"),
+        email: yup.string().required("Required").email("Must be a valid email"),
+        password: yup.string().required("Required").min(6, "Must be at least 6 characters"),
+        confirmPassword: yup
+          .string()
+          .required("Required")
+          .oneOf([yup.ref("password")], "Passwords must match")
+      })
+    ),
+    validationMode: "oninput"
+  });
+
   const loading = van.state(false);
 
-  const handleChangeName = (e: KeyboardEvent) => {
-    name.val = (e.target as HTMLInputElement).value;
-  };
-
-  const handleChangeEmail = (e: KeyboardEvent) => {
-    email.val = (e.target as HTMLInputElement).value;
-  };
-
-  const handleChangePassword = (e: KeyboardEvent) => {
-    password.val = (e.target as HTMLInputElement).value;
-  };
-
-  const handleChangeConfirmPassword = (e: KeyboardEvent) => {
-    confirmPassword.val = (e.target as HTMLInputElement).value;
-  };
-
-  const handleSubmitSignup = (e: SubmitEvent) => {
-    e.preventDefault();
-
-    if (!name.val) return alert("Name is required");
-    if (!email.val) return alert("Email is required");
-    if (password.val.length < 6) return alert("Password should be at least six (6) characters");
-    if (password.val !== confirmPassword.val) return alert("Passwords must match");
-
-    createUserWithEmailAndPassword(auth, email.val, password.val)
+  const handleSubmitSignup = form.handleSubmit((values) => {
+    createUserWithEmailAndPassword(auth, values.email, values.password)
       .then(async (creds) => {
         if (creds.user) {
           await setDoc(doc(db, "users", creds.user.uid), {
             id: creds.user.uid,
-            name: name.val,
+            name: values.name,
             email: creds.user.email
           });
 
@@ -56,7 +52,7 @@ export default function SignupPage() {
       .finally(() => (loading.val = false));
 
     loading.val = true;
-  };
+  });
 
   return div(
     { className: "w-full h-full grid place-items-center" },
@@ -80,50 +76,53 @@ export default function SignupPage() {
         " and ",
         a({ href: "https://tailwindcss.com", target: "_blank", className: "underline text-sky-400" }, "TailwindCSS")
       ),
-      form(
+      formEl(
         { onsubmit: handleSubmitSignup },
         label({ className: "label" }, "Name"),
-        input({
-          className: "form-field",
-          autofocus: true,
-          value: name,
-          oninput: handleChangeName
-        }),
+        Input(
+          form.register("name", {
+            autofocus: true,
+            error: () => form.error("name")
+          })
+        ),
+
         label({ className: "label" }, "Email"),
-        input({
-          type: "email",
-          className: "form-field",
-          value: email,
-          oninput: handleChangeEmail
-        }),
+        Input(
+          form.register("email", {
+            type: "email",
+            error: () => form.error("email")
+          })
+        ),
+
         div(
           { className: "flex gap-4" },
           div(
             { className: "flex-1" },
             label({ className: "label" }, "Password"),
-            input({
-              type: "password",
-              className: "form-field",
-              value: password,
-              oninput: handleChangePassword
-            })
+            Input(
+              form.register("password", {
+                type: "password",
+                error: () => form.error("password")
+              })
+            )
           ),
+
           div(
             { className: "flex-1" },
             label({ className: "label" }, "Confirm Password"),
-            input({
-              type: "password",
-              className: "form-field",
-              value: confirmPassword,
-              oninput: handleChangeConfirmPassword
-            })
+            Input(
+              form.register("confirmPassword", {
+                type: "password",
+                error: () => form.error("confirmPassword")
+              })
+            )
           )
         ),
         button(
           {
             type: "submit",
             className: "btn-primary",
-            disabled: () => loading.val || !name.val || !email.val || !password.val || !confirmPassword.val
+            disabled: () => loading.val
           },
           "Create Account"
         ),

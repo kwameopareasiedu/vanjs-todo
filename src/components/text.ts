@@ -1,6 +1,5 @@
-import van from "vanjs-core";
+import van, { ChildDom } from "vanjs-core";
 import { isComponentChild, mergeClasses } from "@/utils/common.ts";
-import { ComponentChild } from "@/types.ts";
 
 const { p } = van.tags;
 
@@ -11,9 +10,9 @@ interface TextProps extends Partial<HTMLParagraphElement> {
   italic?: boolean;
 }
 
-export const Text = (propsOrChild: TextProps | ComponentChild, ...children: ComponentChild[]) => {
+export const Text = (propsOrChild: TextProps | ChildDom, ...children: ChildDom[]) => {
   if (isComponentChild(propsOrChild)) {
-    return p(propsOrChild as ComponentChild, ...children);
+    return p(propsOrChild as ChildDom, ...children);
   }
 
   const {

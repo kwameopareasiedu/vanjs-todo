@@ -1,5 +1,5 @@
 import van from "vanjs-core";
-import { Text } from "@/components";
+import { Input, Text } from "@/components";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebase.ts";
 import { Link, navigate } from "vanjs-routing";
@@ -7,7 +7,7 @@ import { Form, yupValidator } from "vanjs-form";
 import { HOME_ROUTE } from "@/config/routes.ts";
 import * as yup from "yup";
 
-const { div, input, label, form: formEl, button, a } = van.tags;
+const { div, label, form: formEl, button, a } = van.tags;
 
 export default function LoginPage() {
   const form = new Form({
@@ -20,7 +20,8 @@ export default function LoginPage() {
         email: yup.string().required("Required").email("Must be a valid email"),
         password: yup.string().required("Required")
       })
-    )
+    ),
+    validationMode: "oninput"
   });
 
   const loading = van.state(false);
@@ -64,20 +65,22 @@ export default function LoginPage() {
       formEl(
         { onsubmit: handleSubmitLogin },
         label({ className: "label" }, "Email"),
-        input(
+        Input(
           form.register("email", {
             type: "email",
-            className: "form-field",
-            autofocus: true
+            autofocus: true,
+            error: () => form.error("email")
           })
         ),
+
         label({ className: "label" }, "Password"),
-        input(
+        Input(
           form.register("password", {
             type: "password",
-            className: "form-field"
+            error: () => form.error("password")
           })
         ),
+
         button(
           {
             type: "submit",
