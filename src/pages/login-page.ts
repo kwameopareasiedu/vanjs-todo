@@ -3,30 +3,30 @@ import { Text } from "@/components";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebase.ts";
 import { Link, navigate } from "vanjs-routing";
+import { Form, yupValidator } from "vanjs-form";
 import { HOME_ROUTE } from "@/config/routes.ts";
+import * as yup from "yup";
 
-const { div, input, label, form, button, a } = van.tags;
+const { div, input, label, form: formEl, button, a } = van.tags;
 
 export default function LoginPage() {
-  const email = van.state("");
-  const password = van.state("");
+  const form = new Form({
+    initialValues: {
+      email: "",
+      password: ""
+    },
+    validator: yupValidator(
+      yup.object({
+        email: yup.string().required("Required").email("Must be a valid email"),
+        password: yup.string().required("Required")
+      })
+    )
+  });
+
   const loading = van.state(false);
 
-  const handleChangeEmail = (e: KeyboardEvent) => {
-    email.val = (e.target as HTMLInputElement).value;
-  };
-
-  const handleChangePassword = (e: KeyboardEvent) => {
-    password.val = (e.target as HTMLInputElement).value;
-  };
-
-  const handleSubmitLogin = (e: SubmitEvent) => {
-    e.preventDefault();
-
-    if (!email.val) return alert("Email is required");
-    if (!password.val) return alert("Password is required");
-
-    signInWithEmailAndPassword(auth, email.val, password.val)
+  const handleSubmitLogin = form.handleSubmit((values) => {
+    signInWithEmailAndPassword(auth, values.email, values.password)
       .then((creds) => {
         if (creds.user) {
           alert(`Welcome!`);
@@ -37,7 +37,7 @@ export default function LoginPage() {
       .finally(() => (loading.val = false));
 
     loading.val = true;
-  };
+  });
 
   return div(
     { className: "w-full h-full grid place-items-center" },
@@ -61,28 +61,28 @@ export default function LoginPage() {
         " and ",
         a({ href: "https://tailwindcss.com", target: "_blank", className: "underline text-sky-400" }, "TailwindCSS")
       ),
-      form(
+      formEl(
         { onsubmit: handleSubmitLogin },
         label({ className: "label" }, "Email"),
-        input({
-          type: "email",
-          className: "form-field",
-          autofocus: true,
-          value: email,
-          oninput: handleChangeEmail
-        }),
+        input(
+          form.register("email", {
+            type: "email",
+            className: "form-field",
+            autofocus: true
+          })
+        ),
         label({ className: "label" }, "Password"),
-        input({
-          type: "password",
-          className: "form-field",
-          value: password,
-          oninput: handleChangePassword
-        }),
+        input(
+          form.register("password", {
+            type: "password",
+            className: "form-field"
+          })
+        ),
         button(
           {
             type: "submit",
             className: "btn-primary",
-            disabled: () => loading.val || !email.val || !password.val
+            disabled: () => loading.val
           },
           "Login"
         ),
