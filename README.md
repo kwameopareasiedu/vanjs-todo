@@ -9,7 +9,7 @@ This is a full-featured todo-list app with the following features:
 6. Deleting todos
 
 # Live Demo
-Try the project live at https://kwameopareasiedu.github.io/
+Click [here](https://kwameopareasiedu.github.io/vanjs-todo) for the live demo
 
 ## Technologies
 The following technologies were used to build this app
